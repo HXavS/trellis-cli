@@ -112,8 +112,10 @@ func (c *NewCommand) Run(args []string) int {
 	trellisPath := filepath.Join(path, "trellis")
 	trellisVersion := github.DownloadRelease("roots/trellis", c.trellisVersion, path, trellisPath)
 	bedrockVersion := github.DownloadRelease("roots/bedrock", "latest", path, filepath.Join(path, "site"))
-
+	
 	os.Chdir(path)
+	
+	bedrockInstall := execCommandWithOutput("composer", "install", c.UI)
 
 	if err := c.trellis.LoadProject(); err != nil {
 		c.UI.Error(err.Error())
@@ -157,6 +159,7 @@ func (c *NewCommand) Run(args []string) int {
 	fmt.Printf("\n%s project created with versions:\n", color.GreenString(c.name))
 	fmt.Printf("  Trellis %s\n", trellisVersion)
 	fmt.Printf("  Bedrock v%s\n", bedrockVersion)
+	fmt.Printf("  Bedrock Install Statusv%s\n", bedrockInstall)
 
 	return 0
 }
