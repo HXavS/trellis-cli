@@ -111,11 +111,13 @@ func (c *NewCommand) Run(args []string) int {
 
 	trellisPath := filepath.Join(path, "trellis")
 	trellisVersion := github.DownloadRelease("roots/trellis", c.trellisVersion, path, trellisPath)
-	bedrockVersion := github.DownloadRelease("roots/bedrock", "latest", path, filepath.Join(path, "site"))
+	bedrockPath  := filepath.Join(path, "site")
+	bedrockVersion := github.DownloadRelease("roots/bedrock", "latest", path, bedrockPath)
 	
 	os.Chdir(path)
 	
-	bedrockInstall := execCommandWithOutput("composer", "install", c.UI)
+	composerArgs := "install -d" + bedrockPath
+	bedrockInstall := execCommandWithOutput(composer, "install", c.UI)
 
 	if err := c.trellis.LoadProject(); err != nil {
 		c.UI.Error(err.Error())
